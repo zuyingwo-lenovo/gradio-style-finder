@@ -68,7 +68,7 @@ class ImageProcessor:
             # Hint: Use the preprocess pipeline and add a batch dimension with unsqueeze(0)
             input_tensor = None  # YOUR CODE HERE
             
-            # TODO: Extract features using ResNet50
+            # TODO: Extract features using ResNet50 and convert to numpy array
             # Hint: Use torch.no_grad() to disable gradient calculation
             feature_vector = None  # YOUR CODE HERE
             
