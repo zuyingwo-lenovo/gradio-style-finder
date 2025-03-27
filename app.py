@@ -78,9 +78,46 @@ def create_gradio_interface(app):
     1. Proper layout and components
     2. Event handlers for user interactions
     3. Clear documentation and instructions
+    4. Example images section for easy testing
     """
-    # TODO: Implement the Gradio interface
-    pass
+    with gr.Blocks(theme=gr.themes.Soft(), title="Fashion Style Analyzer") as demo:
+        # TODO: Add introduction markdown with project description
+        gr.Markdown("")  # Placeholder for introduction
+        
+        with gr.Row():
+            with gr.Column(scale=1):
+                # TODO: Add image input component
+                gr.Image()  # Placeholder for image input
+                
+                # Example images section
+                gr.Markdown("### Example Images")
+                with gr.Row():
+                    # TODO: Add example images with proper labels and IDs
+                    # Hint: Use gr.Image with value="examples/casual_outfit.jpg" etc.
+                    gr.Image()  # Placeholder for example images
+                
+                # Options section
+                with gr.Row():
+                    # TODO: Add checkbox for alternatives
+                    # TODO: Add slider for number of alternatives
+                    gr.Checkbox()  # Placeholder for alternatives checkbox
+                    gr.Slider()  # Placeholder for alternatives count slider
+                
+                # TODO: Add submit button
+                gr.Button()  # Placeholder for submit button
+            with gr.Column(scale=2):
+                # TODO: Add output markdown component
+                gr.Markdown()  # Placeholder for output
+        
+        # TODO: Add event handlers for:
+        # 1. Alternatives checkbox visibility
+        # 2. Example image clicks
+        # 3. Submit button click
+        
+        # TODO: Add project description markdown
+        gr.Markdown("")  # Placeholder for project description
+    
+    return demo
 
 if __name__ == "__main__":
     try:
@@ -97,4 +134,4 @@ if __name__ == "__main__":
             share=True  # Set to False if you don't want to create a public link
         )
     except Exception as e:
-        print(f"Error starting the application: {str(e)}")
+        print(f"Error starting the application: {str(e)}") 
