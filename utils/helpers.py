@@ -1,5 +1,8 @@
+# utils/helpers.py
 """
 Utility functions for the Style Finder application.
+These helper functions provide support for retrieving data
+and formatting responses.
 """
 
 def get_all_items_for_image(image_url, dataset):
@@ -13,7 +16,9 @@ def get_all_items_for_image(image_url, dataset):
     Returns:
         DataFrame: All items related to the image
     """
-    return dataset[dataset['Image URL'] == image_url]
+    # TODO: Filter the dataset to find all rows with the matching image URL
+    # Hint: Use dataset filtering with the 'Image URL' column
+    return None  # YOUR CODE HERE
 
 def format_alternatives_response(user_response, alternatives, similarity_score, threshold=0.8):
     """
@@ -28,21 +33,23 @@ def format_alternatives_response(user_response, alternatives, similarity_score, 
     Returns:
         str: Enhanced response with alternatives
     """
+    # TODO: Create different introductions based on similarity score
+    # For high similarity (>= threshold), mention budget-friendly alternatives
+    # For low similarity (< threshold), mention visually similar items
     if similarity_score >= threshold:
-        enhanced_response = user_response + "\n\n## Learning Activity: Budget-Friendly Alternatives\n\nAs part of your learning exercise, here are some more affordable options for each item:\n"
+        # TODO: Create enhanced response for high similarity
+        enhanced_response = None  # YOUR CODE HERE
     else:
-        enhanced_response = user_response + "\n\n## Learning Activity: Similar Items from Market Research\n\nHere are some visually similar items we found through our market research process:\n"
+        # TODO: Create enhanced response for low similarity
+        enhanced_response = None  # YOUR CODE HERE
     
-    for item, alts in alternatives.items():
-        enhanced_response += f"\n### {item}:\n"
-        if alts:
-            for alt in alts:
-                enhanced_response += f"- {alt['title']} for {alt['price']} from {alt['source']} (Buy it here: {alt['link']})\n"
-        else:
-            enhanced_response += "- No alternatives found in our database.\n"
+    # TODO: For each item and its alternatives, add formatted information
+    # Hint: Iterate through the alternatives dictionary
+    # Include the item name and details for each alternative
+    # YOUR CODE HERE
     
-    # Add educational context
-    enhanced_response += "\n\n## Course Reflection\n"
-    enhanced_response += "This exercise demonstrates how computer vision and API integration can be combined to create practical fashion technology applications. Consider how this approach could be applied to other domains or with different data sources."
+    # TODO: Add educational context at the end
+    # Hint: Include a reflection section to make it more educational
+    # YOUR CODE HERE
     
     return enhanced_response

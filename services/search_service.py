@@ -1,5 +1,8 @@
+# services/search_service.py
 """
 Service for searching online products using SerpAPI.
+This module handles extracting descriptions from the AI's response
+and searching for similar products online.
 """
 
 import re
@@ -29,20 +32,18 @@ class SearchService:
         Returns:
             list: Dictionaries containing item names and detailed descriptions
         """
-        pattern = re.compile(
-            r"\*\*(?P<item_name>.*?)\*\*\s+(is|are)\s+(?P<description>.*?\.)(?=\s*\n|\*\*|$)",
-            re.DOTALL
-        )
+        # TODO: Create a regular expression pattern to extract item names and descriptions
+        # Hint: Use re.compile with a pattern that matches the format:
+        # **Item Name** is description.
+        pattern = None  # YOUR CODE HERE
 
+        # TODO: Initialize an empty list to store extracted descriptions
         descriptions = []
-        for match in pattern.finditer(bot_response):
-            item_name = match.group("item_name").strip()
-            description = match.group("description").strip()
-            
-            descriptions.append({
-                "item_name": item_name,
-                "description": description
-            })
+        
+        # TODO: Find all matches in the bot response using the pattern
+        # Hint: Use pattern.finditer to iterate through all matches
+        # Extract item_name and description from each match
+        # YOUR CODE HERE
         
         return descriptions
     
@@ -57,31 +58,35 @@ class SearchService:
         Returns:
             dict: Item names mapped to lists of alternatives
         """
+        # TODO: Initialize a dictionary to store alternatives for each item
         alternatives = {}
         
         print("\n Starting SerpAPI search for alternatives...\n")
         
+        # TODO: Iterate through each item description
         for desc in descriptions:
-            item_name = desc["item_name"]
-            query = f"Search for affordable alternatives of: {desc['description']}"
+            # TODO: Extract item name and create search query
+            # Hint: Use the description to form a meaningful query
+            item_name = None  # YOUR CODE HERE
+            query = None  # YOUR CODE HERE
             
-            params = {
-                "engine": "google_shopping",
-                "q": query,
-                "api_key": self.api_key,
-            }
+            # TODO: Set up SerpAPI parameters
+            # Hint: Include the engine type, query, and API key
+            params = None  # YOUR CODE HERE
             
             try:
-                search = GoogleSearch(params)
-                search_results = search.get_dict()
+                # TODO: Initialize the SerpAPI search and get results
+                # Hint: Use GoogleSearch with the parameters
+                search = None  # YOUR CODE HERE
+                search_results = None  # YOUR CODE HERE
                 
-                shopping_items = self._extract_shopping_results(search_results)
-                if shopping_items:
-                    print(f"Alternatives found for {item_name}.")
-                else:
-                    print(f"No shopping results found for {item_name} alternative.")
+                # TODO: Extract and process shopping items
+                # Hint: Use the _extract_shopping_results helper method
+                shopping_items = None  # YOUR CODE HERE
                 
-                alternatives[item_name] = shopping_items[:top_n]
+                # TODO: Add the results to the alternatives dictionary
+                # Hint: Limit to top_n items
+                alternatives[item_name] = None  # YOUR CODE HERE
             except Exception as e:
                 print(f"Error querying SerpAPI for {item_name}: {e}")
                 alternatives[item_name] = []
@@ -98,20 +103,16 @@ class SearchService:
         Returns:
             list: Dictionaries containing product details
         """
-        shopping_results = json_response.get("shopping_results", [])
+        # TODO: Get the shopping_results from the JSON response
+        # Hint: Use .get() with a default empty list
+        shopping_results = None  # YOUR CODE HERE
+        
+        # TODO: Initialize a list to store extracted results
         extracted_results = []
         
-        for item in shopping_results:
-            title = item.get("title", "No title available").strip()
-            price = item.get("price", "No price available").strip()
-            link = item.get("product_link", "No link available").strip()
-            source = item.get("source", "Unknown source").strip()
-            
-            extracted_results.append({
-                "title": title,
-                "price": price,
-                "link": link,
-                "source": source
-            })
+        # TODO: Iterate through each item in shopping_results
+        # For each item, extract title, price, link, and source
+        # Add these details to extracted_results
+        # YOUR CODE HERE
         
         return extracted_results
