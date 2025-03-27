@@ -1,5 +1,8 @@
 """
 Main application file for the Style Finder Gradio interface.
+This is a starter template for students to complete the implementation.
+
+TODO: Complete the implementation of the StyleFinderApp class and create_gradio_interface function.
 """
 
 import gradio as gr
@@ -17,6 +20,11 @@ import config
 class StyleFinderApp:
     """
     Main application class that orchestrates the Style Finder workflow.
+    
+    TODO: Complete the implementation of this class by:
+    1. Implementing proper initialization with dataset loading and error handling
+    2. Implementing the process_image method to handle image processing workflow
+    3. Adding proper error handling and cleanup
     """
     
     def __init__(self, dataset_path, serp_api_key=None):
@@ -31,28 +39,8 @@ class StyleFinderApp:
             FileNotFoundError: If the dataset file is not found
             ValueError: If the dataset is empty or invalid
         """
-        # Load the dataset
-        if not os.path.exists(dataset_path):
-            raise FileNotFoundError(f"Dataset file not found: {dataset_path}")
-            
-        self.data = pd.read_pickle(dataset_path)
-        if self.data.empty:
-            raise ValueError("The loaded dataset is empty")
-        
-        # Initialize components
-        self.image_processor = ImageProcessor(
-            image_size=config.IMAGE_SIZE,
-            norm_mean=config.NORMALIZATION_MEAN,
-            norm_std=config.NORMALIZATION_STD
-        )
-        
-        self.llm_service = LlamaVisionService(
-            model_id=config.LLAMA_MODEL_ID,
-            project_id=config.PROJECT_ID,
-            region=config.REGION
-        )
-        
-        self.search_service = SearchService(api_key=serp_api_key) if serp_api_key else None
+        # TODO: Implement dataset loading with proper error handling
+        pass
     
     def process_image(self, image, alternatives_count=5, include_alternatives=True):
         """
@@ -66,69 +54,15 @@ class StyleFinderApp:
         Returns:
             str: Formatted response with fashion analysis and alternatives
         """
-        # Save the image temporarily if it's not already a file path
-        if not isinstance(image, str):
-            temp_file = NamedTemporaryFile(delete=False, suffix=".jpg")
-            image_path = temp_file.name
-            image.save(image_path)
-        else:
-            image_path = image
-        
-        # Step 1: Encode the image
-        user_encoding = self.image_processor.encode_image(image_path, is_url=False)
-        if user_encoding['vector'] is None:
-            return "Error: Unable to process the image. Please try another image."
-        
-        # Step 2: Find the closest match
-        closest_row, similarity_score = self.image_processor.find_closest_match(user_encoding['vector'], self.data)
-        if closest_row is None:
-            return "Error: Unable to find a match. Please try another image."
-        
-        print(f"Closest match: {closest_row['Item Name']} with similarity score {similarity_score:.2f}")
-        
-        # Step 3: Get all related items
-        all_items = get_all_items_for_image(closest_row['Image URL'], self.data)
-        if all_items.empty:
-            return "Error: No items found for the matched image."
-        
-        # Step 4: Generate fashion response
-        bot_response = self.llm_service.generate_fashion_response(
-            user_image_base64=user_encoding['base64'],
-            matched_row=closest_row,
-            all_items=all_items,
-            similarity_score=similarity_score,
-            threshold=config.SIMILARITY_THRESHOLD
-        )
-        
-        # Clean up temporary file
-        if not isinstance(image, str):
-            try:
-                os.unlink(image_path)
-            except:
-                pass
-        
-        # Step 5: If search service is available and alternatives are requested
-        if self.search_service and include_alternatives:
-            # Extract item descriptions
-            item_descriptions = self.search_service.extract_item_descriptions(bot_response)
-            
-            # Search for alternatives
-            alternatives = self.search_service.search_alternatives(
-                item_descriptions, 
-                top_n=alternatives_count
-            )
-            
-            # Format the final response
-            final_response = format_alternatives_response(
-                bot_response,
-                alternatives,
-                similarity_score,
-                config.SIMILARITY_THRESHOLD
-            )
-            
-            return final_response
-        
-        return bot_response
+        # TODO: Implement the image processing workflow:
+        # 1. Save the image temporarily if needed
+        # 2. Encode the image using image_processor
+        # 3. Find the closest match in the dataset
+        # 4. Get all related items
+        # 5. Generate fashion response using LLM
+        # 6. Clean up temporary files
+        # 7. Handle alternatives if requested
+        pass
 
 def create_gradio_interface(app):
     """
@@ -139,74 +73,14 @@ def create_gradio_interface(app):
         
     Returns:
         gr.Blocks: Configured Gradio interface
-    """
-    with gr.Blocks(theme=gr.themes.Soft(), title="Fashion Style Analyzer") as demo:
-        gr.Markdown(
-            """
-            # Fashion Style Analyzer
-            
-            ## Course Project: Computer Vision-Based Fashion Recognition
-            
-            Upload an image to analyze fashion elements and find similar items or budget-friendly alternatives.
-            This tool demonstrates multimodal AI for fashion analysis using Llama 3.2 Vision Instruct model.
-            """
-        )
-        
-        with gr.Row():
-            with gr.Column(scale=1):
-                image_input = gr.Image(type="pil", label="Upload Fashion Image")
-                
-                with gr.Row():
-                    include_alternatives = gr.Checkbox(
-                        label="Include Shopping Alternatives", 
-                        value=True,
-                        info="Enable to search for similar items online"
-                    )
-                    
-                    alt_count = gr.Slider(
-                        minimum=1, 
-                        maximum=10, 
-                        value=5, 
-                        step=1, 
-                        label="Number of Alternatives",
-                        visible=True
-                    )
-                
-                submit_btn = gr.Button("Analyze Style", variant="primary")
-            
-            with gr.Column(scale=2):
-                output = gr.Markdown(label="Style Analysis Results")
-        
-        # Update visibility of alt_count based on include_alternatives
-        include_alternatives.change(
-            fn=lambda x: gr.update(visible=x),
-            inputs=[include_alternatives],
-            outputs=[alt_count]
-        )
-        
-        # Connect the button to the process_image function
-        submit_btn.click(
-            fn=app.process_image,
-            inputs=[image_input, alt_count, include_alternatives],
-            outputs=output
-        )
-        
-        gr.Markdown(
-            """
-            ### About This Project
-            
-            This application demonstrates how computer vision and natural language processing can be combined to analyze fashion elements in images. It uses:
-            
-            - **Image Encoding**: Converts images into numerical vectors for comparison
-            - **Similarity Matching**: Finds the closest match in a database of fashion items
-            - **Multimodal AI**: Uses Llama 3.2 Vision Instruct to analyze and describe fashion elements
-            - **API Integration**: Searches for similar items across the web
-            
-            *This project is part of a Coursera course on advanced computer vision applications*
-            """
-        )
     
-    return demo
+    TODO: Implement the Gradio interface with:
+    1. Proper layout and components
+    2. Event handlers for user interactions
+    3. Clear documentation and instructions
+    """
+    # TODO: Implement the Gradio interface
+    pass
 
 if __name__ == "__main__":
     try:
