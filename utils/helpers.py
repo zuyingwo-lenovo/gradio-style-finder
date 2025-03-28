@@ -32,24 +32,21 @@ def format_alternatives_response(user_response, alternatives, similarity_score, 
         
     Returns:
         str: Enhanced response with alternatives
+        
+    TODO: Implement the response formatting:
+    1. Add appropriate header based on similarity score
+    2. Format each alternative with title, price, source, and link
+    3. Handle cases where no alternatives are found
     """
-    # TODO: Create different introductions based on similarity score
-    # For high similarity (>= threshold), mention budget-friendly alternatives
-    # For low similarity (< threshold), mention visually similar items
-    if similarity_score >= threshold:
-        # TODO: Create enhanced response for high similarity
-        enhanced_response = None  # YOUR CODE HERE
-    else:
-        # TODO: Create enhanced response for low similarity
-        enhanced_response = None  # YOUR CODE HERE
+    # TODO: Start with the original response
+    enhanced_response = user_response
     
-    # TODO: For each item and its alternatives, add formatted information
-    # Hint: Iterate through the alternatives dictionary
-    # Include the item name and details for each alternative
-    # YOUR CODE HERE
+    # TODO: Add appropriate header based on similarity score
     
-    # TODO: Add educational context at the end
-    # Hint: Include a reflection section to make it more educational
-    # YOUR CODE HERE
+    # TODO: Format each alternative with:
+    # - Title
+    # - Price
+    # - Source
+    # - Link
     
-    return enhanced_response
+    return enhanced_response 
