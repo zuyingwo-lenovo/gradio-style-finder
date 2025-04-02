@@ -1,8 +1,5 @@
 """
 Main application file for the Style Finder Gradio interface.
-This is a starter template for students to complete the implementation.
-
-TODO: Complete the implementation of the StyleFinderApp class and create_gradio_interface function.
 """
 
 import gradio as gr
@@ -13,18 +10,12 @@ from tempfile import NamedTemporaryFile
 # Import local modules
 from models.image_processor import ImageProcessor
 from models.llm_service import LlamaVisionService
-from services.search_service import SearchService
-from utils.helpers import get_all_items_for_image, format_alternatives_response
+from utils.helpers import get_all_items_for_image, format_alternatives_response, process_response
 import config
 
 class StyleFinderApp:
     """
     Main application class that orchestrates the Style Finder workflow.
-    
-    TODO: Complete the implementation of this class by:
-    1. Implementing proper initialization with dataset loading and error handling
-    2. Implementing the process_image method to handle image processing workflow
-    3. Adding proper error handling and cleanup
     """
     
     def __init__(self, dataset_path, serp_api_key=None):
@@ -39,30 +30,50 @@ class StyleFinderApp:
             FileNotFoundError: If the dataset file is not found
             ValueError: If the dataset is empty or invalid
         """
-        # TODO: Implement dataset loading with proper error handling
-        pass
-    
-    def process_image(self, image, alternatives_count=5, include_alternatives=True):
+        # TODO: Check if dataset file exists and raise FileNotFoundError if not
+            
+        # TODO: Load the dataset
+        
+        # TODO: Check if dataset is empty and raise ValueError if it is
+        
+        # TODO: Initialize image processor component
+        
+        # TODO: Initialize LLM service component
+        
+        # TODO: Initialize search service component if API key is provided
+
+    def process_image(self, image):
         """
-        Process a user-uploaded image and generate a comprehensive response.
+        Process a user-uploaded image and generate a fashion response.
         
         Args:
             image: PIL image uploaded through Gradio
-            alternatives_count (int): Number of alternatives to show
-            include_alternatives (bool): Whether to include shopping alternatives
-            
+                
         Returns:
-            str: Formatted response with fashion analysis and alternatives
+            str: Formatted response with fashion analysis
         """
-        # TODO: Implement the image processing workflow:
-        # 1. Save the image temporarily if needed
-        # 2. Encode the image using image_processor
-        # 3. Find the closest match in the dataset
-        # 4. Get all related items
-        # 5. Generate fashion response using LLM
-        # 6. Clean up temporary files
-        # 7. Handle alternatives if requested
-        pass
+        # TODO: Save the image temporarily if it's not already a file path
+        
+        # TODO: Encode the image using the image processor
+        
+        # TODO: Check if encoding was successful
+        
+        # TODO: Find the closest match in the dataset
+        
+        # TODO: Check if a match was found
+        
+        # TODO: Log match details
+        
+        # TODO: Get all related items for the matched image
+        
+        # TODO: Check if items were found
+        
+        # TODO: Generate fashion response using the LLM service
+        
+        # TODO: Clean up temporary files
+        
+        # TODO: Process and return the response
+
 
 def create_gradio_interface(app):
     """
@@ -73,51 +84,26 @@ def create_gradio_interface(app):
         
     Returns:
         gr.Blocks: Configured Gradio interface
-    
-    TODO: Implement the Gradio interface with:
-    1. Proper layout and components
-    2. Event handlers for user interactions
-    3. Clear documentation and instructions
-    4. Example images section for easy testing
     """
-    with gr.Blocks(theme=gr.themes.Soft(), title="Fashion Style Analyzer") as demo:
-        # TODO: Add introduction markdown with project description
-        gr.Markdown("")  # Placeholder for introduction
-        
-        with gr.Row():
-            with gr.Column(scale=1):
-                # TODO: Add image input component
-                gr.Image()  # Placeholder for image input
-                
-                # Example images section
-                gr.Markdown("### Example Images")
-                with gr.Row():
-                    # TODO: Add example images with proper labels and IDs
-                    # Hint: Use gr.Image with value="examples/casual_outfit.jpg" etc.
-                    gr.Image()  # Placeholder for example images
-                
-                # Options section
-                with gr.Row():
-                    # TODO: Add checkbox for alternatives
-                    # TODO: Add slider for number of alternatives
-                    gr.Checkbox()  # Placeholder for alternatives checkbox
-                    gr.Slider()  # Placeholder for alternatives count slider
-                
-                # TODO: Add submit button
-                gr.Button()  # Placeholder for submit button
-            with gr.Column(scale=2):
-                # TODO: Add output markdown component
-                gr.Markdown()  # Placeholder for output
-        
-        # TODO: Add event handlers for:
-        # 1. Alternatives checkbox visibility
-        # 2. Example image clicks
-        # 3. Submit button click
-        
-        # TODO: Add project description markdown
-        gr.Markdown("")  # Placeholder for project description
+    # TODO: Create Gradio Blocks interface
     
-    return demo
+    # TODO: Add introduction section
+    
+    # TODO: Add example images section
+    
+    # TODO: Add example image buttons
+    
+    # TODO: Add image input, submit button, and status components
+    
+    # TODO: Add output display component
+    
+    # TODO: Configure submit button click event handlers
+    
+    # TODO: Configure example image button event handlers
+    
+    # TODO: Add information about the application
+    
+    # TODO: Return the configured interface
 
 if __name__ == "__main__":
     try:

@@ -1,9 +1,13 @@
-# utils/helpers.py
 """
 Utility functions for the Style Finder application.
-These helper functions provide support for retrieving data
-and formatting responses.
 """
+
+import logging
+import re
+
+# Set up logging
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
 
 def get_all_items_for_image(image_url, dataset):
     """
@@ -16,9 +20,11 @@ def get_all_items_for_image(image_url, dataset):
     Returns:
         DataFrame: All items related to the image
     """
-    # TODO: Filter the dataset to find all rows with the matching image URL
-    # Hint: Use dataset filtering with the 'Image URL' column
-    return None  # YOUR CODE HERE
+    # TODO: Find all items related to the image URL in the dataset
+    
+    # TODO: Log the number of items found
+    
+    # TODO: Return the related items
 
 def format_alternatives_response(user_response, alternatives, similarity_score, threshold=0.8):
     """
@@ -32,21 +38,77 @@ def format_alternatives_response(user_response, alternatives, similarity_score, 
         
     Returns:
         str: Enhanced response with alternatives
-        
-    TODO: Implement the response formatting:
-    1. Add appropriate header based on similarity score
-    2. Format each alternative with title, price, source, and link
-    3. Handle cases where no alternatives are found
     """
-    # TODO: Start with the original response
-    enhanced_response = user_response
+    # TODO: Check if user_response is problematic and create basic response if needed
     
-    # TODO: Add appropriate header based on similarity score
+    # TODO: Add section header based on similarity score
     
-    # TODO: Format each alternative with:
-    # - Title
-    # - Price
-    # - Source
-    # - Link
+    # TODO: Count items and enforce maximum limit
     
-    return enhanced_response 
+    # TODO: Format each alternative item with proper Markdown
+    
+    # TODO: Return the enhanced response
+
+def process_response(response: str) -> str:
+    """
+    Process and escape problematic characters in the response.
+    
+    Args:
+        response (str): The original response text
+        
+    Returns:
+        str: Processed response with escaped characters and proper formatting
+    """
+    if not response:
+        logger.warning("Empty response received")
+        return "# Fashion Analysis\n\nNo detailed analysis was generated. Please refer to the item details below."
+    
+    # Check for rejection messages
+    rejection_phrases = [
+        "I'm not able to provide",
+        "I cannot provide",
+        "I apologize, but I cannot",
+        "I don't feel comfortable",
+        "violated our content policy"
+    ]
+    
+    # If the model rejected but we still have item details, extract and format them
+    if any(phrase in response for phrase in rejection_phrases):
+        logger.warning("Model rejected the request, extracting item details")
+        
+        # Try to extract the item details section
+        items_section = None
+        
+        if "ITEM DETAILS:" in response:
+            # Extract everything after ITEM DETAILS:
+            items_section = "## Item Details\n\n" + response.split("ITEM DETAILS:")[1].strip()
+        elif "SIMILAR ITEMS:" in response:
+            # Extract everything after SIMILAR ITEMS:
+            items_section = "## Similar Items\n\n" + response.split("SIMILAR ITEMS:")[1].strip()
+        
+        if items_section:
+            # Format item details with proper Markdown
+            formatted_items = re.sub(r'^\* ', '- ', items_section, flags=re.MULTILINE)
+            return "# Fashion Analysis\n\nHere are the items detected in your image:\n\n" + formatted_items
+        else:
+            # Return whatever we got with minimal processing
+            return response.replace("$", "\\$")
+    
+    # Escape $ signs for Markdown
+    processed = response.replace("$", "\\$")
+    
+    # Ensure important sections are properly formatted
+    if "ITEM DETAILS:" in processed:
+        processed = processed.replace("ITEM DETAILS:", "## Item Details")
+    
+    if "SIMILAR ITEMS:" in processed:
+        processed = processed.replace("SIMILAR ITEMS:", "## Similar Items")
+    
+    # Add proper formatting to ensure aesthetic display
+    if not processed.startswith("#"):
+        processed = "# Fashion Analysis\n\n" + processed
+    
+    # Ensure all bullet points use consistent Markdown
+    processed = re.sub(r'^\* ', '- ', processed, flags=re.MULTILINE)
+    
+    return processed

@@ -1,14 +1,16 @@
-# models/llm_service.py
 """
 Service for interacting with the Llama 3.2 Vision Instruct model.
-This module handles the communication with the AI model and
-generates fashion-specific responses.
 """
 
+import logging
 from ibm_watsonx_ai import Credentials
 from ibm_watsonx_ai import APIClient
 from ibm_watsonx_ai.foundation_models import ModelInference
 from ibm_watsonx_ai.foundation_models.schema import TextChatParameters
+
+# Set up logging
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
 
 class LlamaVisionService:
     """
@@ -16,7 +18,7 @@ class LlamaVisionService:
     """
     
     def __init__(self, model_id, project_id, region="us-south", 
-                 temperature=0.2, top_p=0.6, api_key=None):
+                 temperature=0.2, top_p=0.6, api_key=None, max_tokens=2000):
         """
         Initialize the service with the specified model and parameters.
         
@@ -27,22 +29,15 @@ class LlamaVisionService:
             temperature (float): Controls randomness in generation
             top_p (float): Nucleus sampling parameter
             api_key (str, optional): API key for authentication
+            max_tokens (int): Maximum tokens in the response
         """
         # TODO: Set up authentication credentials
-        # Hint: Use the Credentials class with the region URL
-        credentials = None  # YOUR CODE HERE
         
-        # TODO: Initialize the API client
-        # Hint: Use the APIClient class with the credentials
-        self.client = None  # YOUR CODE HERE
+        # TODO: Initialize API client
         
         # TODO: Define parameters for the model's behavior
-        # Hint: Use TextChatParameters with temperature and top_p
-        params = None  # YOUR CODE HERE
         
         # TODO: Initialize the model inference object
-        # Hint: Use ModelInference with model_id, credentials, project_id, and params
-        self.model = None  # YOUR CODE HERE
     
     def generate_response(self, encoded_image, prompt):
         """
@@ -56,18 +51,20 @@ class LlamaVisionService:
             str: Model's response
         """
         try:
-            # TODO: Create the messages object with text and image
-            # Hint: The messages should include a user role with text and image content
-            messages = None  # YOUR CODE HERE
+            logger.info("Sending request to LLM with prompt length: %d", len(prompt))
+            
+            # TODO: Create the messages object
             
             # TODO: Send the request to the model
-            # Hint: Use the model.chat method with the messages
-            response = None  # YOUR CODE HERE
             
-            # TODO: Return the model's response
-            # Hint: Extract the content from the first choice in the response
-            return None  # YOUR CODE HERE
+            # TODO: Extract and validate the response
+            
+            # TODO: Check if response appears to be truncated
+            
+            # TODO: Return the content
+            
         except Exception as e:
+            logger.error("Error generating response: %s", str(e))
             return f"Error generating response: {e}"
     
     def generate_fashion_response(self, user_image_base64, matched_row, all_items, 
@@ -85,21 +82,16 @@ class LlamaVisionService:
         Returns:
             str: Detailed fashion response
         """
-        # TODO: Generate a detailed list of items with prices and links
-        # Hint: Use string join with a list comprehension over all_items
-        items_description = None  # YOUR CODE HERE
-
-        # TODO: Create different prompts based on similarity score
-        # For high similarity (>= threshold), create a prompt for exact match
-        # For low similarity (< threshold), create a prompt for closest match
-        if similarity_score >= threshold:
-            # TODO: Create assistant prompt for exact match
-            # Hint: Include role definition, matched outfit details, and step-by-step instructions
-            assistant_prompt = None  # YOUR CODE HERE
-        else:
-            # TODO: Create assistant prompt for closest match
-            # Hint: Include role definition and instructions for analyzing the image
-            assistant_prompt = None  # YOUR CODE HERE
-
-        # Send the prompt to the model
-        return self.generate_response(user_image_base64, assistant_prompt)
+        # TODO: Generate a list of items with prices and links
+        
+        # TODO: Join items with clear separators
+        
+        # TODO: Create prompt based on similarity threshold
+        
+        # TODO: Send the prompt to the model
+        
+        # TODO: Check if response is incomplete and create basic response if needed
+        
+        # TODO: Ensure the items list is included
+        
+        # TODO: Return the final response
